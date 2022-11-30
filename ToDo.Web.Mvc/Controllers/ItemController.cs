@@ -39,10 +39,36 @@ namespace ToDo.Web.Mvc.Controllers
         }
 
         [HttpGet("[action]/{id}")]
-        public async Task<IActionResult> Update([FromRoute] Guid Id)
+        public async Task<IActionResult> Edit([FromRoute] Guid Id)
         {
             Item item = await repository.getAsync(Id);
-            return View(item);
+            UpdateItemModel model = new UpdateItemModel();
+            model.Id = Id;
+            model.Description = item.Description;
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update([Bind("Id","Description")] UpdateItemModel updateItemModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var item = new Item(updateItemModel.Id, updateItemModel.Description);
+                await repository.EditAsync(item);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(updateItemModel);
+        }
+
+
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid Id)
+        {
+
+            await repository.DeleteAsync(Id);
+            return RedirectToAction(nameof(Index));
+            
         }
     }
 }

@@ -83,16 +83,17 @@ namespace ToDo.Infra.Data.Repositories
             };
         }
 
-        public async Task DeleteAsync(Item item)
+        public async Task DeleteAsync(Guid Id)
         {
             var count = 0;
             var query = "delete from Items where id = @Id";
+            var parameter = new { Id = Id };
             using (var con = new SqlConnection(connectionString))
             {
                 try
                 {
                     con.Open();
-                    count = await con.ExecuteAsync(query, item);
+                    count = await con.ExecuteAsync(query, parameter);
                 }
                 catch (Exception)
                 {
@@ -116,7 +117,7 @@ namespace ToDo.Infra.Data.Repositories
                 try
                 {
                     con.Open();
-                    result = await con.ExecuteAsync(query, parameter);
+                    result = await con.QueryFirstOrDefaultAsync<Item>(query, parameter);
                 }
                 catch (Exception)
                 {

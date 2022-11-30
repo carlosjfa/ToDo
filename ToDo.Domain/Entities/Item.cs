@@ -20,6 +20,12 @@ namespace ToDo.Domain.Entities
             CreatedAt = DateTime.Now;
         }
 
+        public Item(Guid Id, string task)
+        {
+            this.Id = Id;
+            Description = task;
+        }
+
         public Guid Id { get; private set; }
         public string Description { get; private set; }
         public bool Done { get; private set; }
